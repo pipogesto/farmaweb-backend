@@ -1,0 +1,53 @@
+<div style="display: flex; justify-content: center; align-items: center; padding: 4rem 1rem; min-height: 70vh;">
+    <div style="background: #fff; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; border: 1px solid var(--border);">
+        <h1 style="text-align: center; color: var(--primary); margin-bottom: 2rem;">Iniciar Sesión</h1>
+        
+        <form id="login-form">
+            <div style="margin-bottom: 20px;">
+                <label for="email" style="display: block; font-weight: bold; margin-bottom: 5px;">Correo Electrónico:</label>
+                <input type="email" id="email" name="email" required style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 5px; box-sizing: border-box;">
+            </div>
+            <div style="margin-bottom: 10px;">
+                <label for="password" style="display: block; font-weight: bold; margin-bottom: 5px;">Contraseña:</label>
+                <input type="password" id="password" name="password" required style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 5px; box-sizing: border-box;">
+            </div>
+            
+            <div style="text-align: right; margin-bottom: 20px;">
+                <a href="#" id="forgot-password-link" style="color: var(--primary); font-size: 0.875rem; text-decoration: none;">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <p id="error-message" class="hidden" style="color: var(--destructive); text-align: center; font-weight: bold; margin-bottom: 1rem;">Correo o contraseña incorrectos.</p>
+            <button type="submit" class="button button-primary w-full">Entrar</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 20px; font-size: 0.875rem; color: var(--muted-foreground);">
+            <p>¿No tienes cuenta? <a href="#" data-page="registro" style="color: var(--primary); font-weight: bold;">Regístrate aquí</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Script rápido para manejar el click de "Olvidé contraseña"
+    document.getElementById('forgot-password-link').addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        if (!email) {
+            alert("Por favor, escribe tu correo en el campo de arriba primero.");
+            return;
+        }
+        
+        if(confirm(`¿Enviar enlace de recuperación a: ${email}?`)) {
+            try {
+                const res = await fetch('/api/forgot-password', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({email: email})
+                });
+                const data = await res.json();
+                alert(data.message);
+            } catch(err) {
+                alert("Error al intentar enviar el correo.");
+            }
+        }
+    });
+</script>
